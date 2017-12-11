@@ -13,31 +13,31 @@ import com.example.sosesahakian.gameengine.Sound;
 
 public class MainMenuScreen extends Screen
 {
-    Bitmap mainMenu = null;
+    Bitmap mainMenu   = null;
     Bitmap insertCoin = null;
-    float passedTime = 0;
-    long startTime = System.nanoTime();
+    float passedTime  = 0;
+    long startTime    = System.nanoTime();
 
-    Music music = null;
-    Sound sound = null;
+    Music music       = null;
+    Sound sound       = null;
 
     public MainMenuScreen(GameEngine gameEngine)
     {
         super(gameEngine);
         mainMenu = gameEngine.loadBitmap("breakoutassets/mainmenu.png");
         insertCoin = gameEngine.loadBitmap("breakoutassets/insertcoin.png");
+
+        //Music and Sound
         sound = gameEngine.loadSound("breakoutassets/explosion.ogg");
         music = gameEngine.loadMusic("breakoutassets/music.ogg");
-
         music.setLooping(true);
         music.play();
-
     }
 
     @Override
     public void update(float deltaTime)
     {
-        if (gameEngine.isTouchDown(0))
+        if( gameEngine.isTouchDown(0) )
         {
             sound.play(1);
             gameEngine.setScreen(new GameScreen(gameEngine));
@@ -47,12 +47,11 @@ public class MainMenuScreen extends Screen
         gameEngine.drawBitmap(mainMenu, 0, 0);
 
         passedTime = passedTime + deltaTime;
-        if ( (passedTime - (int)passedTime) > 0.5f )
+        if( (passedTime - (int)passedTime) > 0.5f )
         {
             gameEngine.drawBitmap(insertCoin, 160 - (insertCoin.getWidth() / 2), 350);
         }
     }
-
 
     @Override
     public void pause()

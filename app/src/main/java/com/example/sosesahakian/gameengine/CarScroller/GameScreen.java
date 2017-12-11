@@ -123,13 +123,13 @@ public class GameScreen extends Screen
     public void pause()
     {
         if (state == State.Running) state = State.GameOver.Paused;
-        gameEngine.music.pause();
+        //gameEngine.music.pause();
     }
 
     @Override
     public void resume()
     {
-        gameEngine.music.play();
+        //gameEngine.music.play();
     }
 
     @Override

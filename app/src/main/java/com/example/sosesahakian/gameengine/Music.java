@@ -3,68 +3,79 @@ package com.example.sosesahakian.gameengine;
 import android.content.res.AssetFileDescriptor;
 import android.media.MediaPlayer;
 
+import java.io.IOException;
+
 /**
  * Created by sosesahakian on 03/10/2017.
  */
 
-public class Music implements MediaPlayer.OnCompletionListener {
+public class Music implements MediaPlayer.OnCompletionListener
+{
     private MediaPlayer mediaPlayer;
     private boolean isPrepared = false;
 
-
-    public Music(AssetFileDescriptor assetFileDescriptor) {
+    public Music(AssetFileDescriptor assetFileDescriptor)
+    {
         mediaPlayer = new MediaPlayer();
-
-        try {
-            mediaPlayer.setDataSource(assetFileDescriptor.getFileDescriptor(),
+        try
+        {
+            mediaPlayer.setDataSource(
+                    assetFileDescriptor.getFileDescriptor(),
                     assetFileDescriptor.getStartOffset(),
-                    assetFileDescriptor.getLength());
-
+                    assetFileDescriptor.getLength()
+            );
             mediaPlayer.prepare();
             isPrepared = true;
             mediaPlayer.setOnCompletionListener(this);
-        } catch (Exception e) {
-            throw new RuntimeException("Could not loaf the music! **********");
+        }
+        catch(Exception e)
+        {
+            throw new RuntimeException("Could not load the music!");
         }
     }
 
-    public boolean isLooping() {
+    public boolean isLooping()
+    {
         return mediaPlayer.isLooping();
     }
 
-    public boolean isPlaying() {
+    public boolean isPlaying()
+    {
         return mediaPlayer.isPlaying();
     }
 
-    public boolean isStopped() {
+    public boolean isStopped()
+    {
         return !isPrepared;
     }
 
-    public void dispose() {
-        if (mediaPlayer.isPlaying()) {
+    public void dispose()
+    {
+        if (mediaPlayer.isPlaying())
+        {
             mediaPlayer.stop();
         }
         mediaPlayer.release();
     }
 
-
-    public void pause() {
+    public void pause()
+    {
         mediaPlayer.pause();
     }
 
     public void play()
     {
-        if (mediaPlayer.isPlaying()) return;
+        if(isPlaying()) return;
 
         try
         {
             synchronized (this)
             {
-                if (!isPrepared) mediaPlayer.prepare();
+                if(!isPrepared) mediaPlayer.prepare();
                 mediaPlayer.start();
             }
         }
-        catch (Exception e)
+        catch(IOException e)
         {
             e.printStackTrace();
         }
@@ -84,19 +95,18 @@ public class Music implements MediaPlayer.OnCompletionListener {
     {
         synchronized (this)
         {
-            if (!isPrepared) return;
+            if(!isPrepared) return;
             mediaPlayer.stop();
             isPrepared = false;
         }
     }
 
     @Override
-    public void onCompletion(MediaPlayer mp)
+    public void onCompletion(MediaPlayer mediaPlayer)
     {
-        synchronized ( this)
+        synchronized (this)
         {
             isPrepared = false;
         }
     }
-
 }

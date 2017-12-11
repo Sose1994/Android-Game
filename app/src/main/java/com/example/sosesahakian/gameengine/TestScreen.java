@@ -13,19 +13,20 @@ import java.util.List;
 public class TestScreen extends Screen
 {
     Bitmap bob = null;
-    int bobX = 0;
-    int bobY = 500;
+    Bitmap sose = null;
+    float soseX = 0;
+    int soseY = 50;
     TouchEvent event = null;
     Sound sound = null;
     Music music = null;
     boolean isPlaying = false;
-    private int framesPerSecond = 0;
 
     public TestScreen(GameEngine gameEngine)
     {
         super(gameEngine);
         bob = gameEngine.loadBitmap("bob.png");
-        sound = gameEngine.loadSound("blocksplosion.wav");
+        //sose = gameEngine.loadBitmap("sose.png");
+        sound = gameEngine.loadSound("breakoutassets/blocksplosion.wav");
         music = gameEngine.loadMusic("breakoutassets/music.ogg");
         music.setLooping(true);
         music.play();
@@ -35,47 +36,33 @@ public class TestScreen extends Screen
     @Override
     public void update(float deltaTime)
     {
-        gameEngine.clearFrameBuffer(Color.BLUE);
-        //gameEngine.drawBitmap(bob, 10, 10);
-        //gameEngine.drawBitmap(bob, 100, 200, 0, 0, 64, 64);
+        gameEngine.clearFrameBuffer(Color.GREEN);
+
+        soseX = soseX + 50 * deltaTime;
+        //if(soseX > gameEngine.getFrameBufferWidth()) soseX = 0 - sose.getWidth();
+
+        gameEngine.drawBitmap(bob, (int)soseX, soseY);
 
         /*
-        for( int pointer = 0; pointer < 5; pointer++ )
-        {
-            if( gameEngine.isTouchDown(pointer) )
-            {
-                gameEngine.drawBitmap(sose, gameEngine.getTouchX(pointer), gameEngine.getTouchY(pointer));
-            }
-        }
-        */
-
-        bobX = bobX + (int)(100 * deltaTime);
-
-        if ( bobX > gameEngine.getFrameBufferWidth()) bobX = 0 - bob.getWidth();
-
         List<TouchEvent> touchEvents = gameEngine.getTouchEvents();
         int stop = touchEvents.size();
-
         if(stop == 0 && event != null)
         {
-            gameEngine.drawBitmap(bob, gameEngine.getTouchX(event.pointer), gameEngine.getTouchY(event.pointer));
+            gameEngine.drawBitmap(sose, gameEngine.getTouchX(event.pointer), gameEngine.getTouchY(event.pointer));
         }
-
         for(int i = 0; i < stop; i++)
         {
             event = touchEvents.get(i);
             //Log.d("TestScreen", "*** Event touch type: " + event.type + ", x: " + event.x + ", y: " + event.y);
-            gameEngine.drawBitmap(bob, gameEngine.getTouchX(event.pointer), gameEngine.getTouchY(event.pointer));
+            gameEngine.drawBitmap(sose, gameEngine.getTouchX(event.pointer), gameEngine.getTouchY(event.pointer));
             if(event.type == TouchEvent.TouchEventType.Down)
             {
                 sound.play(1);
-
             }
         }
-
-        if (gameEngine.isTouchDown(0))
+        if(gameEngine.isTouchDown(0))
         {
-            if (music.isPlaying())
+            if(music.isPlaying())
             {
                 music.pause();
                 isPlaying = false;
@@ -85,18 +72,8 @@ public class TestScreen extends Screen
                 music.play();
                 isPlaying = true;
             }
-
         }
-
-        /*
-        float accX = gameEngine.getAccelerometer()[0];
-        float accY = gameEngine.getAccelerometer()[1];
-        //accX = 0; accY = 0;
-        float x    = gameEngine.getFrameBufferWidth() / 2 + (accX/10) * gameEngine.getFrameBufferWidth();
-        float y    = gameEngine.getFrameBufferHeight() / 2 + (accY/10) * gameEngine.getFrameBufferHeight();
-        gameEngine.drawBitmap(sose, (int) (x - (sose.getWidth()/2)), (int) (y - (sose.getHeight()/2)));
         */
-
     }
 
     @Override
@@ -104,13 +81,14 @@ public class TestScreen extends Screen
     {
         Log.d("TestScreen", "*** Pausing");
         music.pause();
+        isPlaying = false;
     }
 
     @Override
     public void resume()
     {
         Log.d("TestScreen", "*** Resuming");
-        if (!isPlaying)
+        if(!isPlaying)
         {
             music.play();
             isPlaying = true;
@@ -121,6 +99,7 @@ public class TestScreen extends Screen
     public void dispose()
     {
         Log.d("TestScreen", "*** Disposed");
-        music.dispose();
+        music.stop();
+        isPlaying = false;
     }
 }

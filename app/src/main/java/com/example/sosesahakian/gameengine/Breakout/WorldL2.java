@@ -9,34 +9,37 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by sosesahakian on 10/10/2017.
+ * Created by sosesahakian on 12/11/2017.
  */
 
-public class World
+public class WorldL2 extends World
 {
     public static final float MIN_X = 0;
     public static final float MAX_X = 319;
     public static final float MIN_Y = 36;
     public static final float MAX_Y = 479;
-    Ball ball = new Ball();
-    Paddle paddle = new Paddle();
-    List<Block> blocks = new ArrayList<Block>();
+    Ball ball;
+    Paddle paddle;
+    List<Block> blocks;
     GameEngine gameEngine;
     CollisionListener collisionListener;
-    boolean gameOver = false;
-    int points = 0;
-    int lives = 3;
-    int paddleHits = 0;
-    int advance = 0;
-    boolean levelDone = false;
+    boolean gameOver;
+    int points;
+    int lives;
+    int paddleHits;
+    int advance;
 
-    public World()
+    public WorldL2(GameEngine gameEngine, CollisionListener collisionListener)
     {
-        //empty
-    }
-
-    public World(GameEngine gameEngine, CollisionListener collisionListener)
-    {
+        super(gameEngine, collisionListener);
+        ball = new Ball();
+        paddle = new Paddle();
+        blocks = new ArrayList<Block>();
+        gameOver = false;
+        points = 0;
+        lives = 3;
+        paddleHits = 0;
+        advance = 10;
         this.gameEngine = gameEngine;
         this.collisionListener = collisionListener;
         generateBlocks();
@@ -46,8 +49,7 @@ public class World
     {
         blocks.clear();
 
-        for (int y = 50, type = 0; y < 50 + 3 * Block.HEIGHT; y = y + (int)Block.HEIGHT, type++)
-        //for (int y = 50, type = 0; y < 50 + 8 * Block.HEIGHT; y = y + (int)Block.HEIGHT, type++)
+        for (int y = 50, type = 0; y < 50 + 8 * Block.HEIGHT; y = y + (int)Block.HEIGHT, type++)
         {
             // For each column
             for (int x = 20; x < MAX_X - Block.WIDTH/2; x = x + (int)Block.WIDTH)
@@ -104,7 +106,7 @@ public class World
                 collisionListener.gameOver();
                 return;
             } else {
-                ball.y = (int) MAX_Y/2;
+                ball.y = (int) paddle.y - 5;
                 if(ball.vy > 0) ball.vy = -ball.vy;
                 collisionListener.collisionBlock();
             }
@@ -129,8 +131,7 @@ public class World
         //If all blocks are removed, regenerate or better: start a new level
         if(blocks.size() == 0)
         {
-            levelDone = true;
-            //generateBlocks();
+            generateBlocks();
         }
     }
 
@@ -253,7 +254,7 @@ public class World
             if(paddleHits == 3) //To be adjusted for normal play
             {
                 paddleHits = 0;
-                advance = 10;
+                //advance = advance + 10;
                 advanceBlocks();
             }
         }

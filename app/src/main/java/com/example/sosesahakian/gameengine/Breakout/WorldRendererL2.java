@@ -5,27 +5,24 @@ import android.graphics.Bitmap;
 import com.example.sosesahakian.gameengine.GameEngine;
 
 /**
- * Created by sosesahakian on 10/10/2017.
+ * Created by sosesahakian on 12/11/2017.
  */
 
-//
-
-
-public class WorldRenderer
+public class WorldRendererL2
 {
     GameEngine gameEngine;
-    World world;
+    WorldL2 world;
     Bitmap ballImage;
     Bitmap paddleImage;
     Bitmap blocksImage;
 
-    public WorldRenderer(GameEngine gameEngine, World world)
+    public WorldRendererL2(GameEngine gameEngine, WorldL2 world)
     {
         this.gameEngine = gameEngine;
         this.world = world;
-        ballImage = gameEngine.loadBitmap("breakoutassets/ball.png");
-        paddleImage = gameEngine.loadBitmap("breakoutassets/paddle.png");
-        blocksImage = gameEngine.loadBitmap("breakoutassets/blocks.png");
+        ballImage = gameEngine.loadBitmap("breakout_assets/ball.png");
+        paddleImage = gameEngine.loadBitmap("breakout_assets/paddle.png");
+        blocksImage = gameEngine.loadBitmap("breakout_assets/blocks.png");
     }
 
     public void render()

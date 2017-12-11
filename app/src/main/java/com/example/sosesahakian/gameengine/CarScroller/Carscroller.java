@@ -13,7 +13,7 @@ public class Carscroller extends GameEngine
     @Override
     public Screen createStartScreen()
     {
-        music = this.loadMusic("music.ogg");
+        //music = this.loadMusic("music.ogg");
         return new MainMenuScreen(this);
     }
 
@@ -21,13 +21,13 @@ public class Carscroller extends GameEngine
     public void onPause()
     {
         super.onPause();
-        music.pause();
+        //music.pause();
     }
 
     @Override
     public void onResume()
     {
         super.onResume();
-        music.play();
+        //music.play();
     }
 }

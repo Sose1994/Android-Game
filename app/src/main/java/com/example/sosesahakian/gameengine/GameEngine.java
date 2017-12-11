@@ -33,6 +33,8 @@ import java.util.List;
 
 public abstract class GameEngine extends Activity implements Runnable, SensorEventListener
 {
+    private int framesPerSecond = 0;
+
     private Screen screen;
     private Canvas canvas;
     private Bitmap virtualScreen;
@@ -57,7 +59,6 @@ public abstract class GameEngine extends Activity implements Runnable, SensorEve
     private Thread mainLoopThread;
     private State state = State.Paused;
     private List<State> stateChanges = new ArrayList<>();
-    private int framesPerSecond = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -65,7 +66,7 @@ public abstract class GameEngine extends Activity implements Runnable, SensorEve
         super.onCreate(savedInstanceState);
 
         this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN |
-                                  WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         surfaceView = new SurfaceView(this);
         setContentView(surfaceView);
@@ -103,6 +104,11 @@ public abstract class GameEngine extends Activity implements Runnable, SensorEve
         {
             setVirtualScreen(320, 480);
         }
+
+        // *** IMPORTANT *** not flexible right now
+        //above test of screen orientation is premature in the app lifecycle
+        //so we force the virtual screen to be landscape
+        setVirtualScreen(480, 320);
     }
 
     public void onAccuracyChanged(Sensor sensor, int accuracy) {}
@@ -207,6 +213,7 @@ public abstract class GameEngine extends Activity implements Runnable, SensorEve
             }
         }
     }
+
     public Music loadMusic(String filename)
     {
         try
@@ -214,11 +221,12 @@ public abstract class GameEngine extends Activity implements Runnable, SensorEve
             AssetFileDescriptor assetFileDescriptor = getAssets().openFd(filename);
             return new Music(assetFileDescriptor);
         }
-        catch (IOException e)
+        catch(IOException e)
         {
-            throw new RuntimeException("Could not load music file: " + filename + "!!!!!!!!!!!");
+            throw new RuntimeException("Could not load music from file: " + filename);
         }
     }
+
     public Sound loadSound(String filename)
     {
         try
@@ -279,16 +287,13 @@ public abstract class GameEngine extends Activity implements Runnable, SensorEve
         return virtualY;
     }
 
-    //public List<TouchEvent> getTouchEvents() { return null; }
-
-    public Typeface loadFont(String fileName)
+    public Typeface loadFont(String filename)
     {
-        Typeface font = Typeface.createFromAsset(getAssets(), fileName);
-        if (font == null)
+        Typeface font = Typeface.createFromAsset(getAssets(), filename);
+        if(font == null)
         {
-            throw new RuntimeException("Could not load fronts from assets: " + fileName);
+            throw new RuntimeException("Could not load font: " + filename);
         }
-
         return font;
     }
 
@@ -296,7 +301,7 @@ public abstract class GameEngine extends Activity implements Runnable, SensorEve
     {
         paint.setTypeface(font);
         paint.setTextSize(size);
-        paint.setColor(color);
+        paint.setColor(color); //our font in this game has a predifined color
         canvas.drawText(text, x, y, paint);
     }
 
@@ -398,8 +403,8 @@ public abstract class GameEngine extends Activity implements Runnable, SensorEve
                 //now we can do all the drawing stuff
                 fillEvents();
                 currentTime = System.nanoTime();
-                deltaTime = (currentTime - startTime) / 1000000000.0f;
-                if(screen != null ) screen.update(deltaTime);
+                deltaTime = (currentTime - startTime)/1000000000.0f;
+                if (screen != null ) screen.update(deltaTime);
                 startTime = currentTime;
                 freeEvents();
                 //after the screen has made all game objects to the virtualScreen we need to copy
@@ -417,13 +422,8 @@ public abstract class GameEngine extends Activity implements Runnable, SensorEve
                 canvas.drawBitmap(virtualScreen, src, dst, null);
 
                 surfaceHolder.unlockCanvasAndPost(canvas);
-            }//end of state running
+            } //end of state running
+        } //end of the while loop
+    } //end of run() method
 
-        }//end of while loop
-    }//end of run method
-
-    public int getFramerate()
-    {
-        return framesPerSecond;
-    }
 }

@@ -3,10 +3,8 @@ package com.example.sosesahakian.gameengine.Breakout;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.util.Log;
 
 import com.example.sosesahakian.gameengine.GameEngine;
-import com.example.sosesahakian.gameengine.Music;
 import com.example.sosesahakian.gameengine.Screen;
 import com.example.sosesahakian.gameengine.Sound;
 import com.example.sosesahakian.gameengine.TouchEvent;
@@ -14,10 +12,10 @@ import com.example.sosesahakian.gameengine.TouchEvent;
 import java.util.List;
 
 /**
- * Created by sosesahakian on 06/10/2017.
+ * Created by sosesahakian on 12/11/2017.
  */
 
-public class GameScreen extends Screen
+public class GameScreenL2 extends Screen
 {
     enum State
     {
@@ -26,10 +24,11 @@ public class GameScreen extends Screen
         GameOver
     }
 
-    World world = null;
-    WorldRenderer worldRenderer = null;
-    State  state      = State.Running;
+    WorldL2 world2;
+    WorldRendererL2 worldRenderer;
+    GameScreen.State state      = GameScreen.State.Running;
 
+    //Load Level2 background
     Bitmap background = null;
     Bitmap resume     = null;
     Bitmap gameOver   = null;
@@ -40,10 +39,10 @@ public class GameScreen extends Screen
     Sound blockSound    = null;
     Sound gameOverSound = null;
 
-    public GameScreen(GameEngine gameEngine)
+    public GameScreenL2(GameEngine gameEngine)
     {
         super(gameEngine);
-        world = new World(gameEngine, new CollisionListener()
+        world2 = new WorldL2(gameEngine, new CollisionListener()
         {
             @Override
             public void collisionWall() {
@@ -65,44 +64,38 @@ public class GameScreen extends Screen
                 gameOverSound.play(1);
             }
         } );
-        worldRenderer = new WorldRenderer(gameEngine, world);
+        worldRenderer = new WorldRendererL2(gameEngine, world2);
 
         //Bitmaps
-        background = gameEngine.loadBitmap("breakoutassets/background.png");
-        resume = gameEngine.loadBitmap("breakoutassets/resume.png");
-        gameOver = gameEngine.loadBitmap("breakoutassets/gameover.png");
+        //Load level2 bitmap
+        background = gameEngine.loadBitmap("breakout_assets/background.png");
+        resume = gameEngine.loadBitmap("breakout_assets/resume.png");
+        gameOver = gameEngine.loadBitmap("breakout_assets/gameover.png");
 
         //Init font
-        font = gameEngine.loadFont("breakoutassets/font.ttf");
+        font = gameEngine.loadFont("breakout_assets/font.ttf");
 
         //Sounds
-        bounceSound   = gameEngine.loadSound("breakoutassets/bounce.wav");
-        blockSound    = gameEngine.loadSound("breakoutassets/blocksplosion.wav");
-        gameOverSound = gameEngine.loadSound("breakoutassets/gameover.wav");
+        bounceSound   = gameEngine.loadSound("breakout_assets/bounce.wav");
+        blockSound    = gameEngine.loadSound("breakout_assets/blocksplosion.wav");
+        gameOverSound = gameEngine.loadSound("breakout_assets/gameover.wav");
     }
 
     @Override
     public void update(float deltaTime)
     {
-        if(world.gameOver)
+        if(world2.gameOver)
         {
-            state = State.GameOver;
+            state = GameScreen.State.GameOver;
         }
 
-        if(world.levelDone)
+        if(state == GameScreen.State.Paused && gameEngine.getTouchEvents().size() > 0)
         {
-            Log.d("GameScreen", "setScreen level 2");
-            gameEngine.setScreen(new GameScreenL2(gameEngine));
-            return;
-        }
-
-        if(state == State.Paused && gameEngine.getTouchEvents().size() > 0)
-        {
-            state = State.Running;
+            state = GameScreen.State.Running;
             resume();
         }
 
-        if(state == State.GameOver)
+        if(state == GameScreen.State.GameOver)
         {
             List<TouchEvent> events = gameEngine.getTouchEvents();
             for(int i = 0; i < events.size(); i++)
@@ -115,29 +108,30 @@ public class GameScreen extends Screen
             }
         }
 
-        if(state == State.Running && gameEngine.getTouchY(0) < 38 && gameEngine.getTouchX(0) > 280)
+        if(state == GameScreen.State.Running && gameEngine.getTouchY(0) < 38 && gameEngine.getTouchX(0) > 280)
         {
-            state = State.Paused;
+            state = GameScreen.State.Paused;
             pause();
             return;
         }
 
+        //Load new background?
         gameEngine.drawBitmap(background, 0, 0);
 
-        if(state == State.Running)
+        if(state == GameScreen.State.Running)
         {
-            world.update(deltaTime, gameEngine.getAccelerometer()[0]);
+            world2.update(deltaTime, gameEngine.getAccelerometer()[0]);
         }
         worldRenderer.render();
 
-        gameEngine.drawText(font, ("LIVES " + Integer.toString(world.lives) + " | POINTS" + Integer.toString(world.points)), 24, 24, Color.GREEN, 12);
+        gameEngine.drawText(font, ("LIVES " + Integer.toString(world2.lives) + " | POINTS" + Integer.toString(world2.points)), 24, 24, Color.GREEN, 12);
 
-        if(state == State.Paused)
+        if(state == GameScreen.State.Paused)
         {
             gameEngine.drawBitmap(resume, 160 - (resume.getWidth() / 2), 240 - (resume.getHeight() / 2));
         }
 
-        if(state == State.GameOver)
+        if(state == GameScreen.State.GameOver)
         {
             gameEngine.drawBitmap(gameOver, 160 - (gameOver.getWidth() / 2), 240 - (gameOver.getHeight() / 2));
         }
@@ -146,7 +140,7 @@ public class GameScreen extends Screen
     @Override
     public void pause()
     {
-        if(state == State.Running) state = State.Paused;
+        if(state == GameScreen.State.Running) state = GameScreen.State.Paused;
         gameEngine.music.pause();
     }
 
