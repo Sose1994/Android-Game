@@ -14,7 +14,7 @@ public class Maze extends GameEngine
     public Screen createStartScreen()
     {
         //music = loadMusic("breakoutassets/music.ogg");
-        return new GameScreen(this);
+        return new MainMenuScreen(this);
     }
 
     //Then we have an onPause and onResume which called the onpause and onresume in the super,

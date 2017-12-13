@@ -6,8 +6,8 @@ package com.example.sosesahakian.gameengine.Maze;
 
 public class Bob
 {
-    public static final float WIDTH = 20;
-    public static final float HEIGHT = 20;
+    public final float WIDTH = 40;
+    public final float HEIGHT = 40;
     public int x = 1;
     public int y = 1;
     public int speed = 150;

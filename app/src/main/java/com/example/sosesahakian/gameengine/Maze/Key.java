@@ -1,13 +1,32 @@
 package com.example.sosesahakian.gameengine.Maze;
 
+
+import android.graphics.Bitmap;
+
 /**
  * Created by sosesahakian on 08/11/2017.
  */
 
 public class Key
 {
-    public static final float WIDTH = 5;
-    public static final float HEIGHT = 5;
-    public int x = 200;
-    public int y = 200;
+    public static final float WIDTH = 25;
+    public static final float HEIGHT = 25;
+    public int x;
+    public int y;
+    public Color color;
+    public Bitmap bitmap;
+
+    public Key(int x, int y, Color color)
+    {
+        this.x = x;
+        this.y = y;
+        this.color = color;
+    }
+
+    public enum Color
+    {
+        Red,
+        Blue,
+        Green
+    }
 }

@@ -108,7 +108,7 @@ public abstract class GameEngine extends Activity implements Runnable, SensorEve
         // *** IMPORTANT *** not flexible right now
         //above test of screen orientation is premature in the app lifecycle
         //so we force the virtual screen to be landscape
-        setVirtualScreen(480, 320);
+        //setVirtualScreen(480, 320);
     }
 
     public void onAccuracyChanged(Sensor sensor, int accuracy) {}
