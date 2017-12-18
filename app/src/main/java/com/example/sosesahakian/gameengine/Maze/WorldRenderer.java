@@ -37,7 +37,7 @@ public class WorldRenderer
         this.greenKey = gameEngine.loadBitmap("mazeassets/greenkey.png");
 
         this.wallImage = gameEngine.loadBitmap("mazeassets/wall.png");
-        this.bobImage = gameEngine.loadBitmap("mazeassets/bob.png");
+        this.bobImage = gameEngine.loadBitmap("mazeassets/bob3.png");
         this.treasureImage = gameEngine.loadBitmap("mazeassets/treasure.png");
         this.monsterImage = gameEngine.loadBitmap("carscrollerassets/xyellowmonster.png");
         this.blueDoor = gameEngine.loadBitmap("mazeassets/blueDoor.png");
@@ -46,7 +46,7 @@ public class WorldRenderer
 
         resizedBob = Bitmap.createScaledBitmap(bobImage, (int)world.bob.WIDTH, (int)world.bob.HEIGHT, true);
 
-        resizedTreasure = Bitmap.createScaledBitmap(treasureImage, 40, 40, true);
+        resizedTreasure = Bitmap.createScaledBitmap(treasureImage, world.treasure.width, world.treasure.height, true);
 
         for (Wall w : world.walls)
         {
@@ -72,11 +72,11 @@ public class WorldRenderer
         {
             switch (k.color)
             {
-                case Blue: k.bitmap = Bitmap.createScaledBitmap(blueKey, (int)k.WIDTH, (int)k.HEIGHT, true);
+                case Blue: k.bitmap = Bitmap.createScaledBitmap(blueKey, (int)k.width, (int)k.height, true);
                     break;
-                case Red: k.bitmap = Bitmap.createScaledBitmap(redKey, (int)k.WIDTH, (int)k.HEIGHT, true);
+                case Red: k.bitmap = Bitmap.createScaledBitmap(redKey, (int)k.width, (int)k.height, true);
                     break;
-                case Green: k.bitmap = Bitmap.createScaledBitmap(greenKey, (int)k.WIDTH, (int)k.HEIGHT, true);
+                case Green: k.bitmap = Bitmap.createScaledBitmap(greenKey, (int)k.width, (int)k.height, true);
                     break;
             }
 
@@ -87,7 +87,7 @@ public class WorldRenderer
     public void render()
     {
         gameEngine.drawBitmap(resizedBob, world.bob.x, world.bob.y);
-        gameEngine.drawBitmap(resizedTreasure, 240, 420);
+        gameEngine.drawBitmap(resizedTreasure, world.treasure.x, world.treasure.y);
 
         for ( Wall w : world.walls)
         {

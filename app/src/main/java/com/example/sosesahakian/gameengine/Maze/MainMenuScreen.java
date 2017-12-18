@@ -35,9 +35,8 @@ public class MainMenuScreen extends Screen
         }
 
         gameEngine.drawBitmap(menu, 0, 0);
-
-
         gameEngine.drawBitmap(resizedstart, 60, 200);
+
     }
 
     @Override

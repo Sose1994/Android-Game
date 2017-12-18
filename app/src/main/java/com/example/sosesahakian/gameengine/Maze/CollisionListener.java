@@ -6,7 +6,7 @@ package com.example.sosesahakian.gameengine.Maze;
 
 public interface CollisionListener
 {
-    public void collisionFood();
-    public void collisionWall();
-    public void collisionEdge();
+    public void collisionKey();
+    //public void collisionWall();
+    //public void collisionEdge();
 }

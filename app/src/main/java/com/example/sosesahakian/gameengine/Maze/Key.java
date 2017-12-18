@@ -9,8 +9,8 @@ import android.graphics.Bitmap;
 
 public class Key
 {
-    public static final float WIDTH = 25;
-    public static final float HEIGHT = 25;
+    public static final float width = 25;
+    public static final float height = 25;
     public int x;
     public int y;
     public Color color;

@@ -13,21 +13,25 @@ public class Maze extends GameEngine
     @Override
     public Screen createStartScreen()
     {
-        //music = loadMusic("breakoutassets/music.ogg");
+        music = loadMusic("breakoutassets/music.ogg");
+        music.setLooping(true);
+        music.play();
         return new MainMenuScreen(this);
+
+
     }
 
     //Then we have an onPause and onResume which called the onpause and onresume in the super,
-// which means the gameengine will pause or resume the game
+    // which means the gameengine will pause or resume the game
     public void onPause()
     {
         super.onPause();
-        //music.pause();
+        music.pause();
     }
 
     public void onResume()
     {
         super.onResume();
-        //music.play();
+//        music.play();
     }
 }

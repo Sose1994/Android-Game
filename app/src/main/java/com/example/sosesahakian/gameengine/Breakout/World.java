@@ -230,7 +230,7 @@ public class World
         return rect1.intersect(rect2);
 
         /*
-        // Teacher's implementation
+        Teacher's implementation
         if (x < x2+width2 && x + width > x2 && y + height > y2 && y < y2 + height2)
         {
             return true;

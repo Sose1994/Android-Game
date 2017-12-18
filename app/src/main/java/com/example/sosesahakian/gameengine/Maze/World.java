@@ -7,6 +7,7 @@ import com.example.sosesahakian.gameengine.GameEngine;
 import com.example.sosesahakian.gameengine.TouchEvent;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -20,15 +21,21 @@ public class World
     public static final float MIN_Y = 0;
     public static final float MAX_Y = 479;
     Bob bob = new Bob();
-
+    Key key;
+    Treasure treasure = new Treasure(240, 420, 40, 40);
     CollisionListener listener;
     GameEngine gameEngine;
     boolean gameOver;
+    boolean isWon;
     List<Wall> walls = new ArrayList<>();
     TouchEvent touchEvent;
     List<TouchEvent> touchEventList;
     List<Key> keys = new ArrayList<>();
     List<Door> doors = new ArrayList<>();
+    float countdown = 30;
+
+
+
 
     public World(GameEngine gameEngine, CollisionListener listener)
     {
@@ -57,11 +64,24 @@ public class World
 
     public void update(float deltatime)
     {
+        countdown -= deltatime;
+        if (countdown < 0)
+        {
+            gameOver = true;
+            isWon = false;
+        }
+
+        if (collideRects(bob.x, bob.y, bob.WIDTH, bob.HEIGHT, treasure.x, treasure.y, treasure.width, treasure.height))
+        {
+            isWon = true;
+            gameOver = true;
+        }
+
         touchEventList = gameEngine.getTouchEvents();
         if (gameEngine.isTouchDown(0))
         {
-            if (gameEngine.getTouchY(0) < 50)       bob.direction = Bob.Direction.Up;
-            else if (gameEngine.getTouchY(0) > 420) bob.direction = Bob.Direction.Down;
+            if (gameEngine.getTouchY(0) < 120)       bob.direction = Bob.Direction.Up;
+            else if (gameEngine.getTouchY(0) > 360) bob.direction = Bob.Direction.Down;
             else if (gameEngine.getTouchX(0) < 160) bob.direction = Bob.Direction.Left;
             else if (gameEngine.getTouchX(0) > 160) bob.direction = Bob.Direction.Right;
         }
@@ -108,6 +128,14 @@ public class World
         Rect rect2 = new Rect((int) x2, (int)y2, (int)x2+(int)width2, (int)y2+(int)height2);
 
         return rect1.intersect(rect2);
+
+         /*
+        if (x < x2+width2 && x + width > x2 && y + height > y2 && y < y2 + height2)
+        {
+            return true;
+        }
+        return false;
+        */
     }
 
     public void collideBobWall(float deltatime)
@@ -163,7 +191,7 @@ public class World
         for (int i = 0; i < keys.size(); i++)
         {
             Key k = keys.get(i);
-            if (collideRects(bob.x, bob.y, bob.WIDTH, bob.HEIGHT, k.x, k.y, k.WIDTH, k.HEIGHT))
+            if (collideRects(bob.x, bob.y, bob.WIDTH, bob.HEIGHT, k.x, k.y, k.width, k.height))
             {
                 keys.remove(i);
 

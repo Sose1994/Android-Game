@@ -14,6 +14,7 @@ public class Bob
     public Direction direction = Direction.Right;
 
 
+
     enum Direction
     {
         Up,
